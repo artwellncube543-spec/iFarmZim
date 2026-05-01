@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FarmLand Zimbabwe — Marketplace & Community</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Barlow+Condensed:wght@400;600;700;800;900&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#1A3A0A; --dgreen:#0D2005; --lgreen:#2E5A14;
+  --gold:#E8A020; --lgold:#F5C840; --dgold:#B07010;
+  --red:#C03020; --cream:#F5EDD0; --fog:#EBE4C4;
+  --soil:#3A2010; --white:#FDFAF0; --gray:#8A9070;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--dgreen);color:var(--cream);font-family:'Crimson Pro',Georgia,serif;overflow-x:hidden;cursor:none;}
+
+/* CURSOR */
+#cur{width:12px;height:12px;background:var(--gold);border-radius:50%;position:fixed;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .15s,height .15s,opacity .15s;}
+#cur.big{width:44px;height:44px;background:transparent;border:2px solid var(--gold);opacity:.7;}
+#cur-trail{width:6px;height:6px;background:var(--lgold);border-radius:50%;position:fixed;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:left .08s,top .08s,opacity .3s;opacity:.5;}
+
+/* ZIM STRIPE */
+.zim-bar{height:6px;background:linear-gradient(90deg,#006400 0 33%,#FFD200 33% 66%,#C0392B 66% 100%);position:fixed;top:0;left:0;right:0;z-index:9999;}
+
+/* NAV */
+nav{position:fixed;top:6px;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:.9rem 3rem;background:rgba(13,32,5,.97);border-bottom:1px solid rgba(232,160,32,.2);}
+.nav-logo{font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:900;color:var(--lgold);letter-spacing:.04em;display:flex;align-items:center;gap:.5rem;}
+.nav-logo .zl{color:var(--gold);font-style:italic;}
+.nav-links{display:flex;gap:1.5rem;list-style:none;}
+.nav-links a{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,237,208,.6);text-decoration:none;transition:color .2s;padding:.2rem 0;border-bottom:1px solid transparent;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);border-bottom-color:var(--gold);}
+.nav-socials{display:flex;gap:.5rem;}
+.nsoc{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;cursor:none;border:none;transition:transform .2s;text-decoration:none;}
+.nsoc:hover{transform:scale(1.2);}
+.nsoc.wa{background:#25D366;} .nsoc.tt{background:#111;border:1px solid #333;} .nsoc.fb{background:#1877F2;}
+.nav-profile{display:flex;align-items:center;gap:.6rem;background:rgba(232,160,32,.1);border:1px solid rgba(232,160,32,.2);padding:.35rem .9rem .35rem .5rem;cursor:none;transition:background .2s;}
+.nav-profile:hover{background:rgba(232,160,32,.2);}
+.nav-av{width:26px;height:26px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:900;color:var(--dgreen);}
+.nav-name{font-family:'Barlow Condensed',sans-serif;font-size:.78rem;letter-spacing:.07em;text-transform:uppercase;color:var(--lgold);font-weight:700;}
+
+/* HERO */
+.hero{min-height:100vh;position:relative;display:flex;align-items:center;overflow:hidden;padding-top:70px;}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,var(--dgreen) 0%,var(--green) 40%,var(--lgreen) 100%);}
+.hero-pattern{position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(232,160,32,.03) 40px,rgba(232,160,32,.03) 41px);pointer-events:none;}
+.hero-content{position:relative;z-index:2;padding:0 3rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;width:100%;}
+.hero-text{}
+.hero-flag-tag{display:inline-flex;align-items:center;gap:.6rem;background:rgba(232,160,32,.12);border:1px solid rgba(232,160,32,.25);padding:.4rem 1rem;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;opacity:0;animation:fadeUp .6s .1s forwards;}
+h1.htitle{font-family:'Barlow Condensed',sans-serif;font-size:clamp(3.5rem,6vw,6.5rem);font-weight:900;line-height:.95;letter-spacing:-.01em;color:var(--white);margin-bottom:1.2rem;opacity:0;animation:fadeUp .7s .25s forwards;}
+h1.htitle .gold{color:var(--gold);}
+h1.htitle .outline{-webkit-text-stroke:1.5px var(--lgold);color:transparent;}
+.hero-sub{font-size:1.1rem;color:rgba(245,237,208,.65);line-height:1.85;max-width:420px;margin-bottom:2rem;opacity:0;animation:fadeUp .7s .4s forwards;}
+.hero-btns{display:flex;gap:.9rem;flex-wrap:wrap;opacity:0;animation:fadeUp .7s .55s forwards;}
+.hbtn{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;padding:.85rem 2rem;border:none;cursor:none;transition:all .2s;}
+.hbtn.solid{background:var(--gold);color:var(--dgreen);}
+.hbtn.solid:hover{background:var(--lgold);transform:translateY(-2px);}
+.hbtn.outline{background:transparent;color:var(--lgold);border:2px solid var(--gold);}
+.hbtn.outline:hover{background:rgba(232,160,32,.15);}
+
+/* HERO VIDEO PREVIEW */
+.hero-video-side{position:relative;opacity:0;animation:fadeUp .8s .5s forwards;}
+.video-frame-main{position:relative;background:rgba(0,0,0,.6);border:2px solid rgba(232,160,32,.3);overflow:hidden;aspect-ratio:9/16;max-height:500px;}
+.video-frame-main video{width:100%;height:100%;object-fit:cover;opacity:.8;}
+.video-overlay-main{position:absolute;inset:0;background:linear-gradient(to top,rgba(13,32,5,.9) 0%,transparent 50%);display:flex;flex-direction:column;justify-content:flex-end;padding:1.5rem;}
+.vplay-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;background:rgba(232,160,32,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:none;transition:transform .2s,background .2s;border:none;}
+.vplay-btn:hover{transform:translate(-50%,-50%) scale(1.1);background:var(--lgold);}
+.vplay-btn svg{width:24px;height:24px;fill:var(--dgreen);margin-left:3px;}
+.video-caption{font-family:'Barlow Condensed',sans-serif;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.3rem;}
+.video-title-sm{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;color:var(--white);}
+.video-thumb-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.8rem;}
+.vthumb{background:rgba(0,0,0,.5);border:1px solid rgba(232,160,32,.2);aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:1.5rem;cursor:none;transition:border-color .2s;}
+.vthumb:hover{border-color:var(--gold);}
+
+/* HERO STATS */
+.hero-stats-row{display:flex;gap:2.5rem;margin-top:2.5rem;padding-top:2rem;border-top:1px solid rgba(232,160,32,.12);opacity:0;animation:fadeUp .7s .7s forwards;}
+.hstat-num{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;color:var(--gold);line-height:1;}
+.hstat-label{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,237,208,.4);margin-top:.15rem;}
+
+/* ALERT TICKER */
+.ticker{background:var(--red);padding:.6rem 3rem;display:flex;align-items:center;gap:1rem;overflow:hidden;position:sticky;top:70px;z-index:900;}
+.ticker-label{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:#fff;font-weight:700;flex-shrink:0;background:rgba(255,255,255,.2);padding:.2rem .7rem;}
+.ticker-text{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;white-space:nowrap;animation:ticker 40s linear infinite;}
+
+/* SECTION HEADERS */
+.sec-wrap{padding:5rem 3rem;}
+.sec-eye{font-family:'Barlow Condensed',sans-serif;font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.7rem;display:flex;align-items:center;gap:.8rem;}
+.sec-eye::before{content:'';width:2rem;height:2px;background:var(--gold);}
+.sec-ttl{font-family:'Barlow Condensed',sans-serif;font-size:clamp(2rem,3.5vw,3.5rem);font-weight:900;letter-spacing:-.01em;line-height:1.05;color:var(--white);}
+.sec-ttl em{font-style:italic;color:var(--gold);}
+.sec-ttl.dark{color:var(--dgreen);}
+.sec-sub{font-size:1rem;color:rgba(245,237,208,.55);line-height:1.85;margin-top:.7rem;}
+.sec-sub.dark{color:rgba(30,45,10,.6);}
+
+/* VIDEO ADS SECTION */
+.video-section{background:var(--dgreen);padding:5rem 3rem;}
+.video-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem;}
+.vid-card{background:rgba(0,0,0,.4);border:1px solid rgba(232,160,32,.15);overflow:hidden;position:relative;cursor:none;transition:transform .3s,border-color .3s;}
+.vid-card:hover{transform:translateY(-5px);border-color:var(--gold);}
+.vid-thumb{position:relative;aspect-ratio:16/10;background:#000;overflow:hidden;}
+.vid-thumb video{width:100%;height:100%;object-fit:cover;opacity:.75;transition:opacity .3s;}
+.vid-card:hover .vid-thumb video{opacity:1;}
+.vid-thumb-img{width:100%;height:100%;object-fit:cover;opacity:.75;}
+.vid-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.vp-circle{width:50px;height:50px;background:rgba(232,160,32,.85);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s;border:none;cursor:none;}
+.vp-circle:hover,.vid-card:hover .vp-circle{transform:scale(1.12);background:var(--lgold);}
+.vp-circle svg{width:18px;height:18px;fill:var(--dgreen);margin-left:2px;}
+.vid-badge{position:absolute;top:.7rem;left:.7rem;font-family:'Barlow Condensed',sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:.22rem .6rem;}
+.vid-badge.ad{background:var(--gold);color:var(--dgreen);}
+.vid-badge.new{background:var(--red);color:#fff;}
+.vid-badge.hot{background:var(--lgreen);color:#fff;}
+.vid-info{padding:1.2rem 1.3rem 1.3rem;}
+.vid-cat{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.3rem;}
+.vid-title{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:.4rem;line-height:1.2;}
+.vid-meta{font-size:.82rem;color:rgba(245,237,208,.45);display:flex;gap:1rem;}
+.vid-views,.vid-dur{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;letter-spacing:.06em;}
+
+/* MARQUEE */
+.mq{background:var(--gold);padding:.75rem 0;overflow:hidden;white-space:nowrap;}
+.mq-track{display:inline-flex;animation:ticker 28s linear infinite;}
+.mq-item{font-family:'Barlow Condensed',sans-serif;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dgreen);font-weight:700;padding:0 2.5rem;}
+.mq-item::before{content:'●';margin-right:2.5rem;opacity:.4;}
+
+/* ADS BANNER */
+.ad-banner{background:linear-gradient(135deg,var(--lgreen),var(--green));padding:3rem;display:grid;grid-template-columns:1fr auto;align-items:center;gap:2rem;position:relative;overflow:hidden;}
+.ad-banner::before{content:'🌾';position:absolute;right:15%;top:50%;transform:translateY(-50%);font-size:8rem;opacity:.08;pointer-events:none;}
+.ad-banner-flash{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--lgold),transparent);animation:flash 2.5s ease-in-out infinite;}
+.ad-banner-tag{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;background:var(--gold);color:var(--dgreen);padding:.2rem .7rem;font-weight:700;margin-bottom:.7rem;}
+.ad-banner-title{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;color:var(--white);line-height:1.1;}
+.ad-banner-sub{font-size:.9rem;color:rgba(245,237,208,.7);margin-top:.5rem;line-height:1.7;}
+.ad-btn{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;background:var(--gold);color:var(--dgreen);border:none;padding:1rem 2rem;cursor:none;transition:all .2s;flex-shrink:0;}
+.ad-btn:hover{background:var(--lgold);transform:translateY(-2px);}
+
+/* MARKETPLACE */
+.marketplace{background:var(--fog);padding:5rem 3rem;}
+.market-tabs{display:flex;gap:0;border-bottom:2px solid rgba(30,45,10,.12);margin-bottom:2rem;overflow-x:auto;}
+.mtab{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;background:none;border:none;padding:.85rem 1.8rem;color:rgba(30,45,10,.4);cursor:none;position:relative;transition:color .2s;white-space:nowrap;}
+.mtab::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2px;background:var(--gold);transform:scaleX(0);transition:transform .25s;}
+.mtab.active{color:var(--dgreen);}
+.mtab.active::after{transform:scaleX(1);}
+.mtab:hover{color:var(--green);}
+.mpanel{display:none;animation:fadeIn .3s ease;}
+.mpanel.active{display:block;}
+
+/* PRODUCT GRID */
+.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;}
+.prod-card{background:var(--white);border:1px solid rgba(30,45,10,.08);overflow:hidden;cursor:none;transition:transform .3s,box-shadow .3s;position:relative;}
+.prod-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(30,45,10,.15);}
+.prod-img{width:100%;aspect-ratio:1.1;object-fit:cover;display:block;background:var(--fog);}
+.prod-img-placeholder{width:100%;aspect-ratio:1.1;display:flex;align-items:center;justify-content:center;font-size:3.5rem;background:linear-gradient(135deg,var(--fog),var(--cream));}
+.prod-badge-wrap{position:absolute;top:.7rem;left:.7rem;display:flex;flex-direction:column;gap:.3rem;}
+.prod-badge{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:.2rem .6rem;display:inline-block;}
+.pb-sale{background:var(--red);color:#fff;}
+.pb-new{background:var(--lgreen);color:#fff;}
+.pb-hot{background:var(--gold);color:var(--dgreen);}
+.pb-org{background:var(--dgreen);color:var(--lgold);}
+.prod-fav{position:absolute;top:.7rem;right:.7rem;width:30px;height:30px;background:rgba(255,255,255,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;border:none;cursor:none;transition:all .2s;}
+.prod-fav.liked{background:var(--red);}
+.prod-fav:hover{transform:scale(1.15);}
+.prod-info{padding:1rem 1rem 1.2rem;}
+.prod-cat{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);margin-bottom:.3rem;}
+.prod-name{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:700;color:var(--dgreen);margin-bottom:.3rem;line-height:1.2;}
+.prod-seller{font-size:.8rem;color:var(--gray);margin-bottom:.5rem;}
+.prod-seller span{color:var(--lgreen);font-weight:600;}
+.prod-price-row{display:flex;align-items:center;justify-content:space-between;margin-top:.6rem;}
+.prod-price{font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:900;color:var(--dgreen);}
+.prod-price-old{font-family:'Barlow Condensed',sans-serif;font-size:.85rem;color:var(--gray);text-decoration:line-through;margin-left:.4rem;}
+.prod-cart-btn{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;background:var(--gold);color:var(--dgreen);border:none;padding:.45rem .9rem;cursor:none;transition:background .2s;}
+.prod-cart-btn:hover{background:var(--lgold);}
+.prod-stars{font-size:.72rem;color:var(--gold);letter-spacing:.05rem;}
+.prod-rating{font-size:.72rem;color:var(--gray);margin-left:.3rem;}
+
+/* SELLER CONNECT */
+.seller-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
+.seller-card{background:var(--white);border:1px solid rgba(30,45,10,.08);padding:1.5rem;cursor:none;transition:all .3s;position:relative;}
+.seller-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(30,45,10,.12);}
+.seller-card.verified::before{content:'✓ VERIFIED';position:absolute;top:.8rem;right:.8rem;font-family:'Barlow Condensed',sans-serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;background:var(--lgreen);color:#fff;padding:.18rem .5rem;}
+.seller-av{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:900;color:var(--white);margin-bottom:1rem;}
+.seller-name{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;color:var(--dgreen);margin-bottom:.2rem;}
+.seller-location{font-size:.8rem;color:var(--gray);margin-bottom:.5rem;}
+.seller-tags{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.9rem;}
+.stag{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;background:rgba(78,122,42,.1);color:var(--lgreen);padding:.18rem .55rem;}
+.seller-stats{display:flex;gap:1.5rem;margin-bottom:1rem;padding:.8rem;background:var(--fog);}
+.ss-num{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:900;color:var(--dgreen);}
+.ss-lbl{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);}
+.seller-connect-btn{width:100%;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;background:var(--dgreen);color:var(--lgold);border:none;padding:.65rem;cursor:none;transition:background .2s;}
+.seller-connect-btn:hover{background:var(--lgreen);}
+
+/* BUYER REQUESTS */
+.buyer-grid{display:flex;flex-direction:column;gap:1px;background:rgba(30,45,10,.08);}
+.buyer-row{background:var(--white);padding:1.2rem 1.5rem;display:grid;grid-template-columns:1fr auto auto auto;gap:1.5rem;align-items:center;cursor:none;transition:background .2s;}
+.buyer-row:hover{background:rgba(232,160,32,.05);}
+.br-crop{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;color:var(--dgreen);}
+.br-buyer{font-size:.82rem;color:var(--gray);margin-top:.15rem;}
+.br-qty{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;color:var(--lgreen);}
+.br-price{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:900;color:var(--dgreen);}
+.br-respond{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;background:var(--gold);color:var(--dgreen);border:none;padding:.45rem 1rem;cursor:none;transition:background .2s;}
+.br-respond:hover{background:var(--lgold);}
+
+/* SOCIAL SECTION */
+.social-sec{background:var(--green);padding:5rem 3rem;}
+.social-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5px;background:rgba(232,160,32,.08);margin-top:3rem;}
+.soc-card{padding:2.5rem;position:relative;overflow:hidden;cursor:none;transition:transform .3s;}
+.soc-card:hover{transform:translateY(-4px);}
+.soc-card.wa-card{background:#075E54;}
+.soc-card.tt-card{background:#000;}
+.soc-card.fb-card{background:#1877F2;}
+.soc-card-glow{position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;filter:blur(40px);pointer-events:none;}
+.wa-card .soc-card-glow{background:rgba(37,211,102,.3);}
+.tt-card .soc-card-glow{background:rgba(255,255,255,.1);}
+.fb-card .soc-card-glow{background:rgba(255,255,255,.2);}
+.soc-logo{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:1.2rem;}
+.wa-card .soc-logo{background:#25D366;}
+.tt-card .soc-logo{background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);}
+.fb-card .soc-logo{background:rgba(255,255,255,.15);}
+.soc-logo svg{width:22px;height:22px;fill:#fff;}
+.soc-platform{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:.3rem;}
+.soc-handle{font-family:'Barlow Condensed',sans-serif;font-size:1.7rem;font-weight:900;color:#fff;margin-bottom:.7rem;letter-spacing:-.01em;}
+.soc-desc{font-size:.88rem;color:rgba(255,255,255,.6);line-height:1.8;margin-bottom:1.5rem;}
+.soc-follow{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;border:1.5px solid rgba(255,255,255,.35);color:#fff;background:transparent;padding:.6rem 1.4rem;cursor:none;transition:all .2s;}
+.soc-follow:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.6);}
+.soc-bg-icon{position:absolute;right:-.5rem;bottom:-.5rem;font-size:6rem;opacity:.05;pointer-events:none;}
+.soc-stat{font-family:'Barlow Condensed',sans-serif;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:.8rem;}
+
+/* FARMING TIPS / SEASONAL */
+.tips-sec{background:var(--cream);padding:5rem 3rem;}
+.tips-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:3rem;}
+.tip-card{background:var(--white);border:1px solid rgba(30,45,10,.07);padding:1.5rem;cursor:none;transition:all .3s;border-top:4px solid transparent;}
+.tip-card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(30,45,10,.08);}
+.tip-card.plant{border-top-color:var(--lgreen);}
+.tip-card.pest{border-top-color:var(--red);}
+.tip-card.market{border-top-color:var(--gold);}
+.tip-card.weather{border-top-color:var(--sky, #7AB5A0);}
+.tip-icon{font-size:2rem;margin-bottom:.9rem;}
+.tip-cat{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);margin-bottom:.4rem;}
+.tip-title{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;color:var(--dgreen);margin-bottom:.6rem;line-height:1.2;}
+.tip-text{font-size:.85rem;color:rgba(30,45,10,.65);line-height:1.75;}
+.tip-action{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--lgreen);margin-top:.9rem;display:flex;align-items:center;gap:.4rem;}
+.tip-action::after{content:'→';}
+
+/* COMMUNITY */
+.community-sec{background:var(--fog);padding:5rem 3rem;}
+.comm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:3rem;}
+.comm-card{background:var(--white);padding:1.8rem;border-left:4px solid var(--gold);cursor:none;transition:all .3s;}
+.comm-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(30,45,10,.1);}
+.comm-prov{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);margin-bottom:.6rem;}
+.comm-name{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;color:var(--dgreen);margin-bottom:.5rem;}
+.comm-text{font-size:.88rem;color:rgba(30,45,10,.65);line-height:1.85;font-style:italic;}
+.comm-footer{display:flex;align-items:center;gap:.8rem;margin-top:1.2rem;}
+.cav{width:36px;height:36px;border-radius:50%;background:var(--lgreen);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.95rem;color:#fff;font-weight:700;flex-shrink:0;}
+.cauth{font-family:'Barlow Condensed',sans-serif;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;font-weight:700;color:var(--dgreen);}
+.ccrp{font-size:.78rem;color:var(--gray);margin-top:.12rem;}
+
+/* CTA */
+.cta-section{background:var(--gold);padding:5rem 3rem;display:grid;grid-template-columns:1fr auto;align-items:center;gap:3rem;position:relative;overflow:hidden;}
+.cta-section::before{content:'🇿🇼';position:absolute;right:22%;top:50%;transform:translateY(-50%);font-size:9rem;opacity:.1;pointer-events:none;}
+.cta-flash{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);animation:flash 2s ease-in-out infinite;}
+.cta-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.8rem,2.8vw,3rem);font-weight:900;color:var(--dgreen);line-height:1.1;}
+.cta-title em{font-style:italic;}
+.cta-sub{font-size:.95rem;color:rgba(13,32,5,.7);margin-top:.6rem;line-height:1.8;}
+.cta-form{display:flex;flex-shrink:0;}
+.cta-input{background:rgba(13,32,5,.12);border:2px solid rgba(13,32,5,.2);border-right:none;padding:.9rem 1.3rem;font-family:'Crimson Pro',serif;font-size:.95rem;color:var(--dgreen);width:240px;outline:none;transition:border-color .2s;}
+.cta-input::placeholder{color:rgba(13,32,5,.4);}
+.cta-input:focus{border-color:rgba(13,32,5,.5);}
+.cta-submit{background:var(--dgreen);color:var(--lgold);border:none;padding:.9rem 1.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;cursor:none;transition:background .2s;}
+.cta-submit:hover{background:var(--lgreen);}
+.cta-success{display:none;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dgreen);font-weight:700;padding:.9rem 0;}
+
+/* FOOTER */
+footer{background:var(--dgreen);padding:3.5rem 3rem 2rem;border-top:1px solid rgba(232,160,32,.15);}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:2.5rem;border-bottom:1px solid rgba(232,160,32,.1);}
+.footer-brand{font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:900;color:var(--lgold);}
+.footer-brand .zl{color:var(--gold);font-style:italic;}
+.footer-tagline{font-size:.88rem;color:rgba(245,237,208,.4);line-height:1.85;margin-top:.7rem;}
+.footer-soc{display:flex;gap:.6rem;margin-top:1.2rem;}
+.fsoc{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;text-decoration:none;cursor:none;transition:transform .2s;}
+.fsoc:hover{transform:scale(1.18);}
+.footer-col-title{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;}
+.footer-links{list-style:none;}
+.footer-links li{margin-bottom:.6rem;}
+.footer-links a{font-size:.88rem;color:rgba(245,237,208,.4);text-decoration:none;transition:color .2s;}
+.footer-links a:hover{color:var(--lgold);}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:1.8rem;font-family:'Barlow Condensed',sans-serif;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,237,208,.3);}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--dgreen);color:var(--cream);padding:.9rem 1.4rem;border-left:3px solid var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:.82rem;letter-spacing:.06em;z-index:9997;transform:translateY(100px);opacity:0;transition:all .4s cubic-bezier(.175,.885,.32,1.275);max-width:340px;line-height:1.5;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(13,32,5,.85);z-index:9990;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+.modal.open{display:flex;}
+.modal-box{background:var(--dgreen);border:1px solid rgba(232,160,32,.25);width:420px;max-width:95vw;animation:fadeUp .3s ease;}
+.modal-head{background:var(--green);padding:1.2rem 1.8rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(232,160,32,.15);}
+.modal-ttl{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;}
+.modal-close{background:none;border:none;color:rgba(245,237,208,.4);font-size:1.3rem;cursor:none;}
+.modal-body{padding:2rem;}
+
+/* VIDEO MODAL */
+.vid-modal-inner{background:#000;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;position:relative;}
+.vid-modal-inner video{width:100%;height:100%;object-fit:cover;}
+.vid-modal-title{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:.4rem;}
+.vid-modal-meta{font-size:.82rem;color:rgba(245,237,208,.45);}
+
+/* CART SIDEBAR */
+.cart-sidebar{position:fixed;right:-400px;top:0;width:380px;height:100vh;background:var(--dgreen);border-left:1px solid rgba(232,160,32,.2);z-index:5000;transition:right .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;padding-top:6px;}
+.cart-sidebar.open{right:0;}
+.cart-header{background:var(--green);padding:1.2rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(232,160,32,.15);}
+.cart-title{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--gold);}
+.cart-close{background:none;border:none;color:rgba(245,237,208,.5);font-size:1.3rem;cursor:none;}
+.cart-items{flex:1;overflow-y:auto;padding:1.2rem;}
+.cart-empty{text-align:center;padding:3rem 1rem;font-size:.9rem;color:rgba(245,237,208,.35);font-style:italic;}
+.cart-item{display:flex;gap:1rem;padding:1rem 0;border-bottom:1px solid rgba(232,160,32,.08);}
+.ci-icon{font-size:2rem;flex-shrink:0;}
+.ci-name{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;color:var(--white);}
+.ci-price{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;color:var(--gold);margin-top:.2rem;}
+.ci-remove{background:none;border:none;color:rgba(245,237,208,.3);font-size:.9rem;cursor:none;margin-left:auto;flex-shrink:0;align-self:flex-start;}
+.cart-footer{padding:1.2rem 1.5rem;border-top:1px solid rgba(232,160,32,.12);}
+.cart-total{display:flex;justify-content:space-between;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;color:var(--white);margin-bottom:1rem;}
+.cart-checkout{width:100%;background:var(--gold);color:var(--dgreen);border:none;padding:.9rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;cursor:none;transition:background .2s;}
+.cart-checkout:hover{background:var(--lgold);}
+.cart-btn-fixed{position:fixed;bottom:2rem;left:2rem;background:var(--gold);color:var(--dgreen);border:none;width:52px;height:52px;border-radius:50%;font-size:1.2rem;cursor:none;z-index:4999;display:flex;align-items:center;justify-content:center;transition:transform .2s;box-shadow:0 4px 20px rgba(232,160,32,.4);}
+.cart-btn-fixed:hover{transform:scale(1.1);}
+.cart-count{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;width:18px;height:18px;border-radius:50%;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes zoomIn{from{transform:scale(1.06)}to{transform:scale(1)}}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes flash{0%,100%{opacity:0}50%{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes shimmer{from{background-position:-400px 0}to{background-position:400px 0}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease;}
+.reveal.visible{opacity:1;transform:none;}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .product-grid{grid-template-columns:repeat(2,1fr);}
+  .seller-grid{grid-template-columns:1fr 1fr;}
+  .tips-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:768px){
+  nav{padding:.9rem 1.2rem;} .nav-links{display:none;}
+  .hero-content{grid-template-columns:1fr;padding:0 1.5rem;} .hero-video-side{display:none;}
+  .sec-wrap,.video-section,.marketplace,.tips-sec,.community-sec,.social-sec,.cta-section,.social-sec{padding:4rem 1.2rem;}
+  .video-grid,.social-cards,.comm-grid,.tips-grid{grid-template-columns:1fr;}
+  .product-grid,.seller-grid{grid-template-columns:1fr 1fr;}
+  .footer-top{grid-template-columns:1fr 1fr;gap:2rem;}
+  .cta-section{grid-template-columns:1fr;} .cta-form{flex-direction:column;} .cta-input{width:100%;border-right:2px solid rgba(13,32,5,.2);}
+  .cart-sidebar{width:100%;}
+  .hero-stats-row{gap:1.5rem;}
+  .ad-banner{grid-template-columns:1fr;}
+  .buyer-row{grid-template-columns:1fr auto;}.br-qty,.br-price{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-trail"></div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-sidebar" id="cart-sidebar">
+  <div class="cart-header">
+    <div class="cart-title">🛒 Your Cart</div>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <div class="cart-empty">Your cart is empty.<br>Browse the marketplace to add products.</div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total"><span>Total</span><span id="cart-total">$0.00</span></div>
+    <button class="cart-checkout" onclick="showToast('✅ Order placed! Seller will contact you at 0778 232 851.')">Checkout — WhatsApp Seller</button>
+  </div>
+</div>
+
+<!-- CART FAB -->
+<button class="cart-btn-fixed" onclick="toggleCart()">
+  🛒
+  <div class="cart-count" id="cart-count">0</div>
+</button>
+
+<!-- VIDEO MODAL -->
+<div class="modal" id="vid-modal" onclick="if(event.target===this)closeVid()">
+  <div class="modal-box" style="width:680px;max-width:95vw;">
+    <div class="modal-head">
+      <div class="modal-ttl" id="vid-modal-ttl">Video</div>
+      <button class="modal-close" onclick="closeVid()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:0;">
+      <div class="vid-modal-inner">
+        <video id="vid-modal-player" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;" src=""></video>
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8) 0%,transparent 50%);display:flex;align-items:flex-end;padding:1.5rem;">
+          <div>
+            <div class="vid-modal-title" id="vid-modal-name"></div>
+            <div class="vid-modal-meta" id="vid-modal-meta"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<div class="zim-bar"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">🇿🇼 Farm<span class="zl">Land</span></div>
+  <ul class="nav-links">
+    <li><a href="#marketplace" class="nav-link">Marketplace</a></li>
+    <li><a href="#videos" class="nav-link">Videos</a></li>
+    <li><a href="#connect" class="nav-link">Connect</a></li>
+    <li><a href="#community" class="nav-link">Community</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:.8rem;">
+    <div class="nav-socials">
+      <a class="nsoc wa" href="#" onclick="showToast('💬 WhatsApp: A.G NCUBE — Chat now!');return false;" title="WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.556 4.116 1.529 5.845L.057 23.5l5.797-1.522A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.659-.498-5.193-1.369l-.372-.221-3.878 1.017 1.033-3.77-.242-.388A9.954 9.954 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+      </a>
+      <a class="nsoc tt" href="#" onclick="showToast('🎵 TikTok: @agtechhub — Follow for farming tips!');return false;" title="TikTok">
+        <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.8a8.18 8.18 0 004.78 1.52V6.87a4.85 4.85 0 01-1.01-.18z" fill="#fff"/></svg>
+      </a>
+      <a class="nsoc fb" href="#" onclick="showToast('👍 Facebook: Artwell Ncube — Like our page!');return false;" title="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+    </div>
+    <div class="nav-profile" onclick="showToast('👤 Artwell G. Ncube · 56801 Old Lobs · 0778 232 851')">
+      <div class="nav-av">A</div>
+      <div><div class="nav-name">Artwell G. Ncube</div></div>
+    </div>
+  </div>
+</nav>
+
+<!-- ALERT TICKER -->
+<div class="ticker" style="position:sticky;top:70px;z-index:900;">
+  <span style="font-family:'Barlow Condensed',sans-serif;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:#fff;font-weight:700;flex-shrink:0;background:rgba(255,255,255,.2);padding:.22rem .7rem;margin-right:.5rem;">🔴 LIVE</span>
+  <div style="overflow:hidden;flex:1;">
+    <div class="ticker-text">🌽 MAIZE: $320/tonne GMB &nbsp;•&nbsp; 🫘 SOYBEANS: $580/tonne &nbsp;•&nbsp; 🌾 WHEAT: $400/tonne &nbsp;•&nbsp; ⚠ Fall Armyworm Alert — Mashonaland East &nbsp;•&nbsp; 🌧 ZIMMET: Dry spell forecast next 2 weeks &nbsp;•&nbsp; 🛒 NEW LISTINGS: 14 new products in marketplace today &nbsp;•&nbsp; 🌽 MAIZE: $320/tonne GMB &nbsp;•&nbsp; 🫘 SOYBEANS: $580/tonne &nbsp;•&nbsp; 🌾 WHEAT: $400/tonne &nbsp;•&nbsp; ⚠ Fall Armyworm Alert — Mashonaland East &nbsp;•&nbsp; 🌧 ZIMMET: Dry spell forecast next 2 weeks &nbsp;•&nbsp; 🛒 NEW LISTINGS: 14 new products in marketplace today</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="hero-flag-tag">🇿🇼 Zimbabwe's #1 Farming Platform</div>
+      <h1 class="htitle">BUY.<br>SELL.<br><span class="gold">GROW</span><br><span class="outline">TOGETHER.</span></h1>
+      <p class="hero-sub">Connect with buyers and sellers across Zimbabwe. Promote your farming products, watch expert video guides, and join 12,000+ farmers building a stronger agricultural community.</p>
+      <div class="hero-btns">
+        <button class="hbtn solid" onclick="scrollToEl('#marketplace');showToast('🛒 Opening Zimbabwe Farming Marketplace...')">Browse Marketplace</button>
+        <button class="hbtn outline" onclick="scrollToEl('#videos');showToast('📹 Loading farming video ads...')">Watch Videos</button>
+      </div>
+      <div class="hero-stats-row">
+        <div><div class="hstat-num" data-target="12000" data-suffix="+">0</div><div class="hstat-label">Zim Farmers</div></div>
+        <div><div class="hstat-num" data-target="340" data-suffix="+">0</div><div class="hstat-label">Products Listed</div></div>
+        <div><div class="hstat-num" data-target="89" data-suffix="%">0</div><div class="hstat-label">Successful Sales</div></div>
+      </div>
+    </div>
+    <div class="hero-video-side">
+      <div class="video-frame-main">
+        <video autoplay muted loop playsinline src="https://www.w3schools.com/html/mov_bbb.mp4" style="width:100%;height:100%;object-fit:cover;opacity:.5;"></video>
+        <div class="hero-overlay" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,32,5,.9) 0%,rgba(13,32,5,.3) 50%,transparent 100%);"></div>
+        <button class="vplay-btn" onclick="openVid('Hero Demo','Zimbabwe Farming Platform — Buy, Sell & Grow','Featured · 2026','https://www.w3schools.com/html/mov_bbb.mp4')">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <div class="video-overlay-main">
+          <div class="video-caption">🎬 Featured Video</div>
+          <div class="video-title-sm">Zimbabwe Farming — Buy, Sell & Grow Together</div>
+          <div class="video-thumb-row">
+            <div class="vthumb" onclick="openVid('Maize Growing Tips','How to grow 10 tonnes per hectare of maize in Zimbabwe','Crop Guide · 8 min','https://www.w3schools.com/html/mov_bbb.mp4')">🌽</div>
+            <div class="vthumb" onclick="openVid('Pest Control Guide','Fall Armyworm: Identify and destroy fast','Pest Alert · 5 min','https://www.w3schools.com/html/mov_bbb.mp4')">🪲</div>
+            <div class="vthumb" onclick="openVid('Market Prices Live','Live Zimbabwe commodity prices this week','Market Update · 3 min','https://www.w3schools.com/html/mov_bbb.mp4')">📊</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="mq">
+  <div class="mq-track">
+    <span class="mq-item">Maize · Soybeans · Tobacco</span><span class="mq-item">Fertiliser · Seed · Equipment</span><span class="mq-item">Connect Buyers & Sellers</span><span class="mq-item">Live Market Prices</span><span class="mq-item">Pest Control Alerts</span><span class="mq-item">Zimbabwe Agri-Community</span><span class="mq-item">A.G NCUBE · WhatsApp</span><span class="mq-item">@agtechhub · TikTok</span>
+    <span class="mq-item">Maize · Soybeans · Tobacco</span><span class="mq-item">Fertiliser · Seed · Equipment</span><span class="mq-item">Connect Buyers & Sellers</span><span class="mq-item">Live Market Prices</span><span class="mq-item">Pest Control Alerts</span><span class="mq-item">Zimbabwe Agri-Community</span><span class="mq-item">A.G NCUBE · WhatsApp</span><span class="mq-item">@agtechhub · TikTok</span>
+  </div>
+</div>
+
+<!-- SPONSORED AD BANNER -->
+<div class="ad-banner">
+  <div class="ad-banner-flash"></div>
+  <div>
+    <div class="ad-banner-tag">⚡ SPONSORED · LIMITED TIME</div>
+    <div class="ad-banner-title">Certified Maize Seed — SC403<br>Now 20% Off For Pre-Season Orders</div>
+    <div class="ad-banner-sub">Order before August 31 and get free delivery to your farm. Minimum 25kg bags. Trusted by 8,000+ Zimbabwean farmers. Drought-tolerant. High-yield.</div>
+  </div>
+  <button class="ad-btn" onclick="addToCart('SC403 Certified Maize Seed (25kg)', 38.40, '🌽');showToast('🌽 SC403 Maize Seed added to cart! Was $48, now $38.40')">Order Now — $38.40/bag</button>
+</div>
+
+<!-- VIDEO ADS -->
+<section class="video-section" id="videos">
+  <div class="reveal">
+    <div class="sec-eye" style="color:var(--gold);">📹 Video Promotions & Guides</div>
+    <h2 class="sec-ttl">Watch. Learn. <em>Sell More.</em></h2>
+    <p class="sec-sub">Product demos, farming guides, and promotional videos from Zimbabwe's top agri-sellers. Tap to watch.</p>
+  </div>
+  <div class="video-grid reveal">
+    <div class="vid-card">
+      <div class="vid-thumb">
+        <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;opacity:.65;" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+        <div class="vid-play"><button class="vp-circle" onclick="openVid('Compound D Fertiliser','Why Every Zimbabwean Farmer Needs Compound D','Product Ad · 4 min','https://www.w3schools.com/html/mov_bbb.mp4')"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+        <div class="vid-badge ad">AD</div>
+      </div>
+      <div class="vid-info">
+        <div class="vid-cat">Fertiliser</div>
+        <div class="vid-title">Compound D — Boost Your Yield by 40%</div>
+        <div class="vid-meta"><span class="vid-views">👁 24.1K views</span><span class="vid-dur">⏱ 4:12</span></div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <div class="vid-thumb">
+        <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;opacity:.65;" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+        <div class="vid-play"><button class="vp-circle" onclick="openVid('Fall Armyworm Guide','How to Kill Fall Armyworm Fast — Step by Step','Pest Alert · 6 min','https://www.w3schools.com/html/mov_bbb.mp4')"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+        <div class="vid-badge new" style="background:var(--red);">🔴 URGENT</div>
+      </div>
+      <div class="vid-info">
+        <div class="vid-cat">Pest Control</div>
+        <div class="vid-title">Fall Armyworm — Kill It Before It Kills Your Crop</div>
+        <div class="vid-meta"><span class="vid-views">👁 41.8K views</span><span class="vid-dur">⏱ 6:03</span></div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <div class="vid-thumb">
+        <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;opacity:.65;" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+        <div class="vid-play"><button class="vp-circle" onclick="openVid('Sell Your Maize','How to Get the Best Price for Your Maize in Zimbabwe','Market Guide · 5 min','https://www.w3schools.com/html/mov_bbb.mp4')"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+        <div class="vid-badge hot" style="background:var(--lgreen);">🔥 POPULAR</div>
+      </div>
+      <div class="vid-info">
+        <div class="vid-cat">Market</div>
+        <div class="vid-title">How to Get the Best Price for Your Maize — 2026</div>
+        <div class="vid-meta"><span class="vid-views">👁 33.5K views</span><span class="vid-dur">⏱ 5:18</span></div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <div class="vid-thumb">
+        <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;opacity:.65;" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+        <div class="vid-play"><button class="vp-circle" onclick="openVid('Soybean Farming','Growing Soybeans for Profit in Zimbabwe','Crop Guide · 7 min','https://www.w3schools.com/html/mov_bbb.mp4')"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+        <div class="vid-badge ad">AD</div>
+      </div>
+      <div class="vid-info">
+        <div class="vid-cat">Crop Guide</div>
+        <div class="vid-title">Soybeans — Zimbabwe's Most Profitable Rotation Crop</div>
+        <div class="vid-meta"><span class="vid-views">👁 18.2K views</span><span class="vid-dur">⏱ 7:44</span></div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <div class="vid-thumb">
+        <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;opacity:.65;" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+        <div class="vid-play"><button class="vp-circle" onclick="openVid('Irrigation Setup','Low-Cost Drip Irrigation for Small Farms','Equipment · 9 min','https://www.w3schools.com/html/mov_bbb.mp4')"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+        <div class="vid-badge new">NEW</div>
+      </div>
+      <div class="vid-info">
+        <div class="vid-cat">Equipment</div>
+        <div class="vid-title">Affordable Drip Irrigation — Double Your Dry-Season Yield</div>
+        <div class="vid-meta"><span class="vid-views">👁 9.7K views</span><span class="vid-dur">⏱ 9:20</span></div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <div class="vid-thumb">
+        <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;opacity:.65;" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+        <div class="vid-play"><button class="vp-circle" onclick="openVid('Tobacco Curing','Perfect Tobacco Curing Process for Max Auction Value','Crop Guide · 11 min','https://www.w3schools.com/html/mov_bbb.mp4')"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button></div>
+        <div class="vid-badge hot" style="background:var(--lgreen);">🔥 TOP RATED</div>
+      </div>
+      <div class="vid-info">
+        <div class="vid-cat">Tobacco</div>
+        <div class="vid-title">Tobacco Curing Master Class — Maximise Your Auction Grade</div>
+        <div class="vid-meta"><span class="vid-views">👁 52.3K views</span><span class="vid-dur">⏱ 11:45</span></div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:2rem;">
+    <button class="hbtn solid" onclick="showToast('📹 @agtechhub on TikTok — 200+ farming videos! Follow now.')">View All Videos on @agtechhub</button>
+  </div>
+</section>
+
+<!-- MARKETPLACE -->
+<section class="marketplace" id="marketplace">
+  <div class="reveal" style="display:grid;grid-template-columns:1fr auto;align-items:end;margin-bottom:2rem;gap:2rem;">
+    <div>
+      <div class="sec-eye" style="color:var(--rust);">🛒 Zimbabwe Farming Marketplace</div>
+      <h2 class="sec-ttl dark">Buy. Sell. <em>Connect.</em></h2>
+      <p class="sec-sub dark">Browse products from verified Zimbabwean farmers and agri-businesses. Direct seller contact via WhatsApp.</p>
+    </div>
+    <button class="hbtn solid" onclick="showToast('📦 List your product: Message A.G NCUBE on WhatsApp at 0778 232 851')">+ List Your Product</button>
+  </div>
+  <div class="market-tabs reveal">
+    <button class="mtab active" onclick="switchMTab('products',this)">🌽 All Products</button>
+    <button class="mtab" onclick="switchMTab('seeds',this)">🌱 Seeds & Inputs</button>
+    <button class="mtab" onclick="switchMTab('produce',this)">🥦 Fresh Produce</button>
+    <button class="mtab" onclick="switchMTab('equipment',this)">🚜 Equipment</button>
+    <button class="mtab" onclick="switchMTab('buyers',this)">🤝 Buyer Requests</button>
+    <button class="mtab" onclick="switchMTab('sellers',this)">👨‍🌾 Seller Profiles</button>
+  </div>
+
+  <!-- PRODUCTS -->
+  <div class="mpanel active" id="mp-products">
+    <div class="product-grid" id="product-grid"></div>
+  </div>
+  <div class="mpanel" id="mp-seeds"><div class="product-grid" id="seeds-grid"></div></div>
+  <div class="mpanel" id="mp-produce"><div class="product-grid" id="produce-grid"></div></div>
+  <div class="mpanel" id="mp-equipment"><div class="product-grid" id="equip-grid"></div></div>
+
+  <!-- BUYER REQUESTS -->
+  <div class="mpanel" id="mp-buyers">
+    <div style="background:var(--dgreen);padding:1.2rem 1.5rem;margin-bottom:1.5px;display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);">Active Buyer Requests — Respond to Win Business</div>
+      <button onclick="showToast('📢 Post a buying request: Contact A.G NCUBE on WhatsApp')" style="font-family:'Barlow Condensed',sans-serif;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;background:var(--gold);color:var(--dgreen);border:none;padding:.45rem 1rem;cursor:none;">+ Post Request</button>
+    </div>
+    <div class="buyer-grid" id="buyer-grid"></div>
+  </div>
+
+  <!-- SELLER PROFILES -->
+  <div class="mpanel" id="mp-sellers">
+    <div class="seller-grid" id="seller-grid"></div>
+  </div>
+</section>
+
+<!-- SECOND AD BANNER -->
+<div class="ad-banner" style="background:linear-gradient(135deg,#5A1A0A,#8B2A10);">
+  <div class="ad-banner-flash"></div>
+  <div>
+    <div class="ad-banner-tag">📢 ADVERTISE YOUR FARM PRODUCTS HERE</div>
+    <div class="ad-banner-title">Reach 12,000+ Active Zimbabwean<br>Farmers Every Month</div>
+    <div class="ad-banner-sub">Place your product ad on FarmLand Zimbabwe. Video ads, banner ads, and sponsored listings available. Connect with Artwell via WhatsApp to advertise.</div>
+  </div>
+  <button class="ad-btn" onclick="showToast('📲 Contact Artwell Ncube on WhatsApp: A.G NCUBE (0778 232 851) to place your ad!')">Advertise Now</button>
+</div>
+
+<!-- SOCIAL MEDIA -->
+<section class="social-sec" id="connect">
+  <div class="reveal">
+    <div class="sec-eye">📲 Follow & Connect</div>
+    <h2 class="sec-ttl">Join Artwell's <em>Digital Farm</em></h2>
+    <p class="sec-sub">Follow for daily farming tips, market prices, pest alerts, and product promotions across all platforms.</p>
+  </div>
+  <div class="social-cards reveal">
+    <div class="soc-card wa-card">
+      <div class="soc-card-glow"></div>
+      <div class="soc-logo"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.123.556 4.116 1.529 5.845L.057 23.5l5.797-1.522A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg></div>
+      <div class="soc-platform">WhatsApp</div>
+      <div class="soc-handle">A.G NCUBE</div>
+      <div class="soc-desc">Direct WhatsApp for buying, selling, enquiries and urgent farming advice. Message Artwell personally at 0778 232 851. Fast response guaranteed.</div>
+      <button class="soc-follow" onclick="showToast('💬 Opening WhatsApp chat with A.G NCUBE...\n📞 0778 232 851')">Message Now</button>
+      <div class="soc-stat">📞 0778 232 851 · 56801 Old Lobs</div>
+      <div class="soc-bg-icon">💬</div>
+    </div>
+    <div class="soc-card tt-card">
+      <div class="soc-card-glow"></div>
+      <div class="soc-logo"><svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.8a8.18 8.18 0 004.78 1.52V6.87a4.85 4.85 0 01-1.01-.18z" fill="#fff"/></svg></div>
+      <div class="soc-platform">TikTok</div>
+      <div class="soc-handle">@agtechhub</div>
+      <div class="soc-desc">Daily short-form videos on Zimbabwe farming — crop tips, pest control, market prices, product reviews and behind-the-scenes farm life. 200+ videos.</div>
+      <button class="soc-follow" onclick="showToast('🎵 Follow @agtechhub on TikTok for daily Zimbabwe farming content!')">Follow on TikTok</button>
+      <div class="soc-stat">🎵 Farming Tips · Market Updates · Ads</div>
+      <div class="soc-bg-icon">🎵</div>
+    </div>
+    <div class="soc-card fb-card">
+      <div class="soc-card-glow"></div>
+      <div class="soc-logo"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
+      <div class="soc-platform">Facebook</div>
+      <div class="soc-handle">Artwell Ncube</div>
+      <div class="soc-desc">Facebook community for Zimbabwean farmers. Post your products, ask questions, share harvest photos, and connect with buyers and sellers nationwide.</div>
+      <button class="soc-follow" onclick="showToast('👍 Search Facebook: \"Artwell Ncube\" to connect and join the community!')">Like the Page</button>
+      <div class="soc-stat">👥 Farm Community · Product Listings</div>
+      <div class="soc-bg-icon">👍</div>
+    </div>
+  </div>
+</section>
+
+<!-- SEASONAL TIPS -->
+<section class="tips-sec">
+  <div class="reveal" style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:end;">
+    <div>
+      <div class="sec-eye" style="color:var(--rust);">🌱 Season Alerts</div>
+      <h2 class="sec-ttl dark">July 2026 — <em>Act Now</em></h2>
+    </div>
+    <p class="sec-sub dark">Critical actions for Artwell's farm at 56801 Old Lobs this month. Tap each card for detailed advice.</p>
+  </div>
+  <div class="tips-grid reveal">
+    <div class="tip-card plant" onclick="showToast('🌱 PLANTING: Deep plough now. Apply lime if pH below 5.5. Source SC403 or ZM521 seed before October.')">
+      <div class="tip-icon">🚜</div>
+      <div class="tip-cat">Land Preparation</div>
+      <div class="tip-title">Deep Plough Now — July is the Time</div>
+      <div class="tip-text">Break hardpan, expose soil insects and prepare a good seedbed before the October rains. Apply agricultural lime this month for best results.</div>
+      <div class="tip-action">See Full Guide</div>
+    </div>
+    <div class="tip-card pest" onclick="showToast('🪲 PEST ALERT: Fall Armyworm still active on ratoon maize. Scout stored grain for weevils. Apply Actellic Super to stored maize.')">
+      <div class="tip-icon">🪲</div>
+      <div class="tip-cat">Pest Alert</div>
+      <div class="tip-title">Check Stored Grain for Weevils</div>
+      <div class="tip-text">July is prime time for grain weevil damage in storage. Apply Actellic Super or Phostoxin tablets. Dry grain below 12% moisture before sealing.</div>
+      <div class="tip-action">Pest Control Guide</div>
+    </div>
+    <div class="tip-card market" onclick="showToast('💰 MARKET: Maize GMB floor price $320/t. Deliver before 30 June deadline or sell to private buyers at $340–360/t market rate.')">
+      <div class="tip-icon">💰</div>
+      <div class="tip-cat">Market Prices</div>
+      <div class="tip-title">Sell Your Grain — Best Prices Now</div>
+      <div class="tip-text">GMB floor price: $320/tonne. Private traders paying $340–360/tonne for quality grain. Soybeans fetching $580/tonne. Don't delay — prices may dip.</div>
+      <div class="tip-action">View Market Prices</div>
+    </div>
+    <div class="tip-card weather" onclick="showToast('🌧 ZIMMET: 2026/27 outlook — mixed season. Matabeleland: below normal rainfall likely. Mashonaland: near normal. Plan drought-tolerant varieties.')">
+      <div class="tip-icon">🌦</div>
+      <div class="tip-cat">ZIMMET Forecast</div>
+      <div class="tip-title">2026/27 Season Outlook — Plan Early</div>
+      <div class="tip-text">ZIMMET forecasts below-normal rains in Matabeleland. Consider ZM521 drought-tolerant maize or increase sorghum/millet area. Order inputs now.</div>
+      <div class="tip-action">Full Forecast</div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMUNITY -->
+<section class="community-sec" id="community">
+  <div class="reveal" style="display:grid;grid-template-columns:1fr auto;align-items:end;margin-bottom:0;gap:2rem;">
+    <div>
+      <div class="sec-eye" style="color:var(--rust);">🤝 Farmer Community</div>
+      <h2 class="sec-ttl dark">Voices from <em>Zimbabwe's Fields</em></h2>
+    </div>
+    <button class="hbtn solid" onclick="showToast('💬 Community forum launching July 2026! We\'ll notify you at 0778 232 851.')">Join Discussion</button>
+  </div>
+  <div class="comm-grid reveal">
+    <div class="comm-card" onclick="showToast('👋 Connect with Tariro Moyo on Facebook: Artwell Ncube community page')">
+      <div class="comm-prov">📍 Mashonaland East · Marondera</div>
+      <div class="comm-name">SC403 saved my season</div>
+      <p class="comm-text">"We had a dry spell in January. My SC403 short-season maize still gave 4 tonnes/ha while my neighbours lost everything. Always keep a drought-tolerant variety as backup."</p>
+      <div class="comm-footer"><div class="cav">T</div><div><div class="cauth">Tariro Moyo</div><div class="ccrp">Maize · 8 hectares · Sold via FarmLand</div></div></div>
+    </div>
+    <div class="comm-card" onclick="showToast('👋 Connect with Sibongile Dube on WhatsApp: A.G NCUBE (0778 232 851)')">
+      <div class="comm-prov">📍 Matabeleland South · Gwanda</div>
+      <div class="comm-name">I sold 15 tonnes through the marketplace</div>
+      <p class="comm-text">"Listed my sorghum on FarmLand and had 3 buyers call within 2 days. Got $420/tonne instead of the $380 the local trader offered. This platform pays for itself."</p>
+      <div class="comm-footer"><div class="cav">S</div><div><div class="cauth">Sibongile Dube</div><div class="ccrp">Sorghum · 12 hectares · 15t Sold</div></div></div>
+    </div>
+    <div class="comm-card" onclick="showToast('👋 Connect with Farai Chigumba on TikTok: @agtechhub')">
+      <div class="comm-prov">📍 Midlands · Gweru</div>
+      <div class="comm-name">The pest alerts genuinely save crops</div>
+      <p class="comm-text">"The fall armyworm alert came through 4 days before I would have noticed it myself. Sprayed immediately and saved my whole crop. The early warning made all the difference."</p>
+      <div class="comm-footer"><div class="cav">F</div><div><div class="cauth">Farai Chigumba</div><div class="ccrp">Groundnuts &amp; Maize · 5 hectares</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <div class="cta-flash"></div>
+  <div>
+    <h2 class="cta-title">Start Selling Your<br>Farm Products <em>Today</em></h2>
+    <p class="cta-sub">Join 12,000+ Zimbabwean farmers buying and selling on FarmLand. List your product in minutes. Buyers contact you directly via WhatsApp.</p>
+  </div>
+  <div>
+    <div class="cta-form" id="cta-form">
+      <input class="cta-input" type="tel" id="cta-phone" placeholder="Your Zim number..." />
+      <button class="cta-submit" onclick="submitPhone()">Join Free →</button>
+    </div>
+    <div class="cta-success" id="cta-success">✅ Welcome! We'll send listing instructions via SMS.</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">🇿🇼 Farm<span class="zl">Land</span> Zimbabwe</div>
+      <p class="footer-tagline">Buy. Sell. Grow. Together.<br>Zimbabwe's farming marketplace & community.</p>
+      <div class="footer-soc">
+        <a class="fsoc" style="background:#25D366;" href="#" onclick="showToast('💬 WhatsApp: A.G NCUBE — 0778 232 851');return false;">💬</a>
+        <a class="fsoc" style="background:#111;border:1px solid #333;" href="#" onclick="showToast('🎵 TikTok: @agtechhub');return false;">🎵</a>
+        <a class="fsoc" style="background:#1877F2;" href="#" onclick="showToast('👍 Facebook: Artwell Ncube');return false;">👍</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Marketplace</div>
+      <ul class="footer-links">
+        <li><a href="#" onclick="switchMTab('products',document.querySelectorAll('.mtab')[0]);scrollToEl('#marketplace');return false;">All Products</a></li>
+        <li><a href="#" onclick="switchMTab('seeds',document.querySelectorAll('.mtab')[1]);scrollToEl('#marketplace');return false;">Seeds & Inputs</a></li>
+        <li><a href="#" onclick="switchMTab('buyers',document.querySelectorAll('.mtab')[4]);scrollToEl('#marketplace');return false;">Buyer Requests</a></li>
+        <li><a href="#" onclick="showToast('📦 List product: Contact A.G NCUBE — 0778 232 851');return false;">List a Product</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Platform</div>
+      <ul class="footer-links">
+        <li><a href="#" onclick="scrollToEl('#videos');return false;">Video Ads</a></li>
+        <li><a href="#" onclick="scrollToEl('#connect');return false;">Social Media</a></li>
+        <li><a href="#" onclick="showToast('📢 Advertise: Contact A.G NCUBE on WhatsApp');return false;">Advertise Here</a></li>
+        <li><a href="#" onclick="scrollToEl('#community');return false;">Community</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Artwell's Contacts</div>
+      <ul class="footer-links">
+        <li><a href="#" onclick="showToast('💬 WhatsApp: A.G NCUBE');return false;">💬 WhatsApp: A.G NCUBE</a></li>
+        <li><a href="#" onclick="showToast('🎵 TikTok: @agtechhub');return false;">🎵 TikTok: @agtechhub</a></li>
+        <li><a href="#" onclick="showToast('👍 Facebook: Artwell Ncube');return false;">👍 Facebook: Artwell Ncube</a></li>
+        <li><a href="#" onclick="showToast('📞 Phone: 0778 232 851');return false;">📞 0778 232 851</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 FarmLand Zimbabwe · Artwell G. Ncube · 56801 Old Lobs</span>
+    <span>🇿🇼 Kubatana nekurima — United in farming</span>
+  </div>
+</footer>
+
+<script>
+// CURSOR
+const cur=document.getElementById('cur'),trail=document.getElementById('cur-trail');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';setTimeout(()=>{trail.style.left=mx+'px';trail.style.top=my+'px';},80);});
+document.querySelectorAll('a,button,[onclick],.prod-card,.vid-card,.comm-card,.seller-card,.tip-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('big'));
+  el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
+});
+
+// TOAST
+let toastTimer;
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),4000);}
+function scrollToEl(s){document.querySelector(s)?.scrollIntoView({behavior:'smooth'});}
+
+// NAV SCROLL
+window.addEventListener('scroll',()=>{
+  let c='';document.querySelectorAll('section[id]').forEach(s=>{if(window.scrollY>=s.offsetTop-130)c=s.id;});
+  document.querySelectorAll('.nav-link').forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+c)l.classList.add('active');});
+  document.getElementById('navbar').style.boxShadow=window.scrollY>20?'0 4px 20px rgba(0,0,0,.5)':'none';
+});
+
+// REVEAL
+const obs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*60);obs.unobserve(e.target);}});},{threshold:0.07});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// COUNTER
+function animCount(el){
+  const target=parseFloat(el.dataset.target);const suffix=el.dataset.suffix||'';
+  let start=0;const dur=1500;
+  const step=ts=>{if(!start)start=ts;const p=Math.min((ts-start)/dur,1);const ease=1-Math.pow(1-p,3);
+    el.textContent=Math.floor(ease*target).toLocaleString()+suffix;if(p<1)requestAnimationFrame(step);};
+  requestAnimationFrame(step);
+}
+const cobs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting&&e.target.dataset.target){animCount(e.target);cobs.unobserve(e.target);}});},{threshold:.5});
+document.querySelectorAll('[data-target]').forEach(el=>cobs.observe(el));
+
+// TABS - market
+function switchMTab(id,btn){
+  document.querySelectorAll('.mpanel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('mp-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+
+// VIDEO MODAL
+function openVid(ttl,name,meta,src){
+  document.getElementById('vid-modal-ttl').textContent='▶ '+ttl;
+  document.getElementById('vid-modal-name').textContent=name;
+  document.getElementById('vid-modal-meta').textContent=meta;
+  const v=document.getElementById('vid-modal-player');
+  v.src=src; v.play();
+  document.getElementById('vid-modal').classList.add('open');
+}
+function closeVid(){
+  document.getElementById('vid-modal').classList.remove('open');
+  document.getElementById('vid-modal-player').pause();
+}
+
+// CART
+let cart=[];
+function toggleCart(){document.getElementById('cart-sidebar').classList.toggle('open');}
+function addToCart(name,price,icon){
+  cart.push({name,price,icon,id:Date.now()});
+  renderCart();
+  document.getElementById('cart-sidebar').classList.add('open');
+  showToast('🛒 Added: '+name);
+}
+function removeFromCart(id){
+  cart=cart.filter(i=>i.id!==id);
+  renderCart();
+}
+function renderCart(){
+  const el=document.getElementById('cart-items');
+  const count=document.getElementById('cart-count');
+  const total=document.getElementById('cart-total');
+  count.textContent=cart.length;
+  if(cart.length===0){el.innerHTML='<div class="cart-empty">Your cart is empty.<br>Browse the marketplace to add products.</div>';total.textContent='$0.00';return;}
+  el.innerHTML=cart.map(i=>`<div class="cart-item"><div class="ci-icon">${i.icon}</div><div style="flex:1"><div class="ci-name">${i.name}</div><div class="ci-price">$${i.price.toFixed(2)}</div></div><button class="ci-remove" onclick="removeFromCart(${i.id})">✕</button></div>`).join('');
+  total.textContent='$'+cart.reduce((s,i)=>s+i.price,0).toFixed(2);
+}
+
+// PRODUCTS DATA
+const allProducts=[
+  {name:'SC403 Certified Maize Seed',cat:'Seeds',emoji:'🌽',price:48,old:60,seller:'SEEDCO Zimbabwe',loc:'Harare',badge:'pb-hot',rating:5,reviews:142},
+  {name:'Compound D Fertiliser (50kg)',cat:'Fertiliser',emoji:'🪨',price:32,old:null,seller:'Agrivet Supplies',loc:'Bulawayo',badge:'pb-new',rating:4,reviews:87},
+  {name:'Ammonium Nitrate AN (50kg)',cat:'Fertiliser',emoji:'⚗️',price:28,old:35,seller:'ZimChem Inputs',loc:'Gweru',badge:'pb-sale',rating:5,reviews:64},
+  {name:'Roundup Herbicide (5L)',cat:'Chemicals',emoji:'🌿',price:22,old:null,seller:'Chemplex Corp',loc:'Harare',badge:'pb-org',rating:4,reviews:33},
+  {name:'Coragen Insecticide (250ml)',cat:'Pest Control',emoji:'🪲',price:38,old:45,seller:'FMC Zimbabwe',loc:'Mutare',badge:'pb-sale',rating:5,reviews:211},
+  {name:'Drip Irrigation Kit (1 acre)',cat:'Equipment',emoji:'💧',price:185,old:240,seller:'IrriZim',loc:'Harare',badge:'pb-hot',rating:5,reviews:58},
+  {name:'ZM521 Sorghum Seed (5kg)',cat:'Seeds',emoji:'🌾',price:18,old:null,seller:'DRSS Matopos',loc:'Bulawayo',badge:'pb-new',rating:4,reviews:29},
+  {name:'Soybean Seed Inoculant (200g)',cat:'Inputs',emoji:'🫘',price:8,old:null,seller:'Agritex Supplies',loc:'Gweru',badge:'pb-org',rating:4,reviews:44},
+];
+const seedProducts=allProducts.filter(p=>['Seeds','Fertiliser','Inputs','Chemicals'].includes(p.cat));
+const produceProducts=[
+  {name:'Fresh Maize — 1 Tonne Bags',cat:'Grain',emoji:'🌽',price:320,old:null,seller:'Artwell G. Ncube',loc:'56801 Old Lobs',badge:'pb-hot',rating:5,reviews:18},
+  {name:'Groundnuts (50kg bag)',cat:'Produce',emoji:'🥜',price:48,old:null,seller:'Chigumba Farm',loc:'Gweru',badge:'pb-new',rating:4,reviews:7},
+  {name:'Sorghum Grain (1 tonne)',cat:'Grain',emoji:'🌾',price:280,old:null,seller:'Dube Farms',loc:'Gwanda',badge:'pb-org',rating:5,reviews:12},
+  {name:'Fresh Tomatoes (crate 25kg)',cat:'Vegetables',emoji:'🍅',price:15,old:18,seller:'Moyo Horticulture',loc:'Marondera',badge:'pb-sale',rating:4,reviews:31},
+];
+const equipProducts=[
+  {name:'Knapsack Sprayer (20L)',cat:'Equipment',emoji:'🎒',price:45,old:60,seller:'AgroEquip ZW',loc:'Harare',badge:'pb-sale',rating:4,reviews:76},
+  {name:'Push Cultivator (manual)',cat:'Equipment',emoji:'🛠',price:88,old:null,seller:'FarmTech Zim',loc:'Bulawayo',badge:'pb-new',rating:4,reviews:22},
+  {name:'Grain Moisture Meter',cat:'Equipment',emoji:'📊',price:65,old:80,seller:'Precision Ag ZW',loc:'Harare',badge:'pb-sale',rating:5,reviews:41},
+];
+
+function renderProducts(arr,gridId){
+  const g=document.getElementById(gridId);
+  g.innerHTML=arr.map(p=>`
+    <div class="prod-card">
+      <div class="prod-img-placeholder">${p.emoji}</div>
+      <div class="prod-badge-wrap"><span class="prod-badge ${p.badge}">${p.badge==='pb-hot'?'🔥 HOT':p.badge==='pb-new'?'NEW':p.badge==='pb-sale'?'SALE':'ORGANIC'}</span></div>
+      <button class="prod-fav" onclick="this.classList.toggle('liked');showToast(this.classList.contains('liked')?'❤️ Saved to favourites':'💔 Removed from favourites')" style="cursor:none;">🤍</button>
+      <div class="prod-info">
+        <div class="prod-cat">${p.cat}</div>
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-seller">by <span>${p.seller}</span> · ${p.loc}</div>
+        <div class="prod-stars">${'★'.repeat(p.rating)}${'☆'.repeat(5-p.rating)}<span class="prod-rating">(${p.reviews})</span></div>
+        <div class="prod-price-row">
+          <div><span class="prod-price">$${p.price}</span>${p.old?`<span class="prod-price-old">$${p.old}</span>`:''}</div>
+          <button class="prod-cart-btn" onclick="addToCart('${p.name}',${p.price},'${p.emoji}')">Add to Cart</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+renderProducts(allProducts,'product-grid');
+renderProducts(seedProducts,'seeds-grid');
+renderProducts(produceProducts,'produce-grid');
+renderProducts(equipProducts,'equip-grid');
+
+// BUYER REQUESTS
+const buyers=[
+  {crop:'🌽 Maize',buyer:'Harare Stockfeeds Ltd',qty:'50 tonnes',price:'$340/t',urgency:'high'},
+  {crop:'🫘 Soybeans',buyer:'Olivine Industries',qty:'30 tonnes',price:'$590/t',urgency:'high'},
+  {crop:'🌾 Wheat',buyer:'National Foods Ltd',qty:'20 tonnes',price:'$410/t',urgency:'med'},
+  {crop:'🥜 Groundnuts',buyer:'ZimOil Processing',qty:'10 tonnes',price:'$490/t',urgency:'med'},
+  {crop:'🌿 Cotton',buyer:'Cottco Zimbabwe',qty:'5 tonnes',price:'$620/t',urgency:'low'},
+  {crop:'🍅 Tomatoes',buyer:'TM Pick n Pay Stores',qty:'200 crates',price:'$18/crate',urgency:'high'},
+];
+document.getElementById('buyer-grid').innerHTML=buyers.map(b=>`
+  <div class="buyer-row">
+    <div><div class="br-crop">${b.crop}</div><div class="br-buyer">${b.buyer}</div></div>
+    <div class="br-qty">${b.qty}</div>
+    <div class="br-price">${b.price}</div>
+    <button class="br-respond" onclick="showToast('✅ Responding to ${b.buyer}\\n📞 They will contact you at 0778 232 851\\n💬 Or message A.G NCUBE on WhatsApp')">Respond</button>
+  </div>`).join('');
+
+// SELLER PROFILES
+const sellers=[
+  {name:'Artwell G. Ncube',loc:'56801 Old Lobs',tags:['Maize','Soybeans','Inputs'],color:'#2E5A14',listings:12,sales:47,rating:'5.0',verified:true},
+  {name:'Tariro Moyo',loc:'Marondera, Mash East',tags:['Maize','Horticulture'],color:'#5A3A0E',listings:8,sales:31,rating:'4.9',verified:true},
+  {name:'Sibongile Dube',loc:'Gwanda, Mat South',tags:['Sorghum','Millet','Livestock'],color:'#3A1A5A',listings:6,sales:22,rating:'4.8',verified:false},
+  {name:'SEEDCO Zimbabwe',loc:'Harare CBD',tags:['Certified Seed','Agrochemicals'],color:'#0A4A2A',listings:45,sales:890,rating:'5.0',verified:true},
+  {name:'AgroEquip ZW',loc:'Bulawayo',tags:['Equipment','Irrigation','Tools'],color:'#4A2A0A',listings:23,sales:156,rating:'4.7',verified:true},
+  {name:'Farai Chigumba',loc:'Gweru, Midlands',tags:['Groundnuts','Maize','Lime'],color:'#1A3A5A',listings:5,sales:18,rating:'4.8',verified:false},
+];
+document.getElementById('seller-grid').innerHTML=sellers.map(s=>`
+  <div class="seller-card ${s.verified?'verified':''}">
+    <div class="seller-av" style="background:${s.color};">${s.name[0]}</div>
+    <div class="seller-name">${s.name}</div>
+    <div class="seller-location">📍 ${s.loc}</div>
+    <div class="seller-tags">${s.tags.map(t=>`<span class="stag">${t}</span>`).join('')}</div>
+    <div class="seller-stats">
+      <div><div class="ss-num">${s.listings}</div><div class="ss-lbl">Listings</div></div>
+      <div><div class="ss-num">${s.sales}</div><div class="ss-lbl">Sales</div></div>
+      <div><div class="ss-num">⭐${s.rating}</div><div class="ss-lbl">Rating</div></div>
+    </div>
+    <button class="seller-connect-btn" onclick="showToast('💬 Connecting with ${s.name}...\\n📲 Message via WhatsApp: A.G NCUBE (0778 232 851)')">Connect via WhatsApp</button>
+  </div>`).join('');
+
+// CTA
+function submitPhone(){
+  const p=document.getElementById('cta-phone').value;
+  if(!p||p.length<9){showToast('⚠ Enter a valid Zimbabwe phone number.');return;}
+  document.getElementById('cta-form').style.display='none';
+  document.getElementById('cta-success').style.display='block';
+  showToast('🎉 Welcome! You\'ll receive an SMS with instructions. Welcome to FarmLand Zimbabwe!');
+}
+
+// AUTO TICKER updates
+setInterval(()=>{
+  const prices=['$322','$318','$325','$315','$330'];
+  const p=prices[Math.floor(Math.random()*prices.length)];
+  // subtle live price feel — just toast occasionally
+},12000);
+</script>
+</body>
+</html>
